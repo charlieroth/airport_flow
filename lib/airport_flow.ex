@@ -6,9 +6,12 @@ defmodule AirportFlow do
   end
 
   def open_airports() do
+    # Flow operations run in GenStage stage processes making them concurrent
     airports_csv()
     |> File.stream!()
+    # Treat the data source as a producer
     |> Flow.from_enumerable()
+    # Flow.map/2 and Flow.filter/2 will act as consumer or producer_consumer
     |> Flow.map(fn row ->
       [row] = CSV.parse_string(row, skip_headers: false)
 
