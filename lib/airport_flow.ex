@@ -1,4 +1,9 @@
 defmodule AirportFlow do
+  @moduledoc """
+  Root module
+
+  Current contains all logic
+  """
   alias NimbleCSV.RFC4180, as: CSV
 
   def airports_csv() do

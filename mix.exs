@@ -22,7 +22,8 @@ defmodule AirportFlow.MixProject do
   defp deps do
     [
       {:flow, "~> 1.1"},
-      {:nimble_csv, "~> 1.1"}
+      {:nimble_csv, "~> 1.1"},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 end
