@@ -28,6 +28,13 @@ defmodule AirportFlow do
       }
     end)
     |> Flow.reject(&(&1.type == "closed"))
+    # Add a partition layer to ensure items sharing same :country are sent to
+    # same reducer
+    |> Flow.partition(key: {:key, :country})
+    # Flow.reduce/3 is a producer that distributes batches of items to work on
+    |> Flow.reduce(fn -> %{} end, fn item, acc ->
+      Map.update(acc, item.country, 1, &(&1 + 1))
+    end)
     |> Enum.to_list()
   end
 end
