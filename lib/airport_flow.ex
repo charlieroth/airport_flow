@@ -33,8 +33,17 @@ defmodule AirportFlow do
     |> Flow.partition(key: {:key, :country})
     # Flow.group_by/2 is more convenient than Flow.reduce/3 if your only goal
     # is to group elements in the list
-    |> Flow.group_by(fn item -> item.country end)
-    |> Flow.map(fn {country, data} -> {country, Enum.count(data)} end)
+    |> Flow.group_by(fn item ->
+      item.country
+    end)
+    |> Flow.map(fn {country, data} ->
+      {country, Enum.count(data)}
+    end)
+    # Take only top 10 by count
+    |> Flow.take_sort(10, fn {_, a}, {_, b} ->
+      a > b
+    end)
     |> Enum.to_list()
+    |> List.flatten()
   end
 end
