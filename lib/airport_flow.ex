@@ -31,10 +31,10 @@ defmodule AirportFlow do
     # Add a partition layer to ensure items sharing same :country are sent to
     # same reducer
     |> Flow.partition(key: {:key, :country})
-    # Flow.reduce/3 is a producer that distributes batches of items to work on
-    |> Flow.reduce(fn -> %{} end, fn item, acc ->
-      Map.update(acc, item.country, 1, &(&1 + 1))
-    end)
+    # Flow.group_by/2 is more convenient than Flow.reduce/3 if your only goal
+    # is to group elements in the list
+    |> Flow.group_by(fn item -> item.country end)
+    |> Flow.map(fn {country, data} -> {country, Enum.count(data)} end)
     |> Enum.to_list()
   end
 end
